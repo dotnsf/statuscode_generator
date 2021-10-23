@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"/>
+<title>Status Code Generator</title>
+<script type="text/javascript" src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="apple-mobile-web-app-title" content="Status Code Generator"/>
+
+<style>
+.code_success{
+  border-style: solid;
+  border-color: green;
+}
+.code_error{
+  border-style: solid;
+  border-color: red;
+}
+</style>
+<script>
+function call_api(){
+  var code = 200;
+  var v = $('#code').val();
+  if( v ){
+    try{
+      code = parseInt( v );
+    }catch( e ){
+    }
+
+    $('#result_container').html( '' );
+    $('#result_container').removeClass( 'code_success' );
+    $('#result_container').removeClass( 'code_error' );
+    if( code ){
+      $.ajax({
+        type: 'GET',
+        url: '/status?code=' + code,
+        success: function( result ){
+          $('#result_container').addClass( 'code_success' );
+          $('#result_container').html( JSON.stringify( result, null, 2 ) );
+        },
+        error: function( e0, e1, e2 ){
+          $('#result_container').addClass( 'code_error' );
+          console.log( e0, e1, e2 );
+          var obj = {
+            error: true,
+            code: e0.responseJSON.code,
+            text: e0.responseText,
+            status: e0.statusText
+          };
+          $('#result_container').html( JSON.stringify( obj, null, 2 ) );
+        }
+      });
+    }else{
+      $('#result_container').html( 'パラメータエラー' );
+    }
+  }
+}
+</script>
+</head>
+<body>
+
+<div class="container" id="input_container">
+  HTTP Status Code : <input type="number" id="code" value="200"/><br/>
+  <button class="btn btn-primary" onClick="call_api();">AJAX</button>
+</table>
+
+<div class="container"  style="position: relative; top: 50px;" id="result_container">
+</div>
+
+</body>
+</html>
