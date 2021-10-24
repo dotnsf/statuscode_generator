@@ -33,7 +33,7 @@ function call_api(){
     }catch( e ){
     }
 
-    $('#result_container').html( '' );
+    $('#result_html').html( '' );
     $('#result_container').removeClass( 'code_success' );
     $('#result_container').removeClass( 'code_error' );
     if( code ){
@@ -42,7 +42,7 @@ function call_api(){
         url: '/status?code=' + code,
         success: function( result ){
           $('#result_container').addClass( 'code_success' );
-          $('#result_container').html( JSON.stringify( result, null, 2 ) );
+          $('#result_html').html( JSON.stringify( result, null, 2 ) );
         },
         error: function( e0, e1, e2 ){
           $('#result_container').addClass( 'code_error' );
@@ -53,11 +53,11 @@ function call_api(){
             text: e0.responseText,
             status: e0.statusText
           };
-          $('#result_container').html( JSON.stringify( obj, null, 2 ) );
+          $('#result_html').html( JSON.stringify( obj, null, 2 ) );
         }
       });
     }else{
-      $('#result_container').html( 'パラメータエラー' );
+      $('#result_html').html( 'パラメータエラー' );
     }
   }
 }
@@ -70,7 +70,9 @@ function call_api(){
   <button class="btn btn-primary" onClick="call_api();">AJAX</button>
 </table>
 
-<div class="container"  style="position: relative; top: 50px;" id="result_container">
+<div class="container"  style="height: 200px; position: relative; top: 50px;" id="result_container">
+<pre id="result_html">
+</pre>
 </div>
 
 </body>
